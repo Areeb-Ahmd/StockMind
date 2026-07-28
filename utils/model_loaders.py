@@ -34,13 +34,22 @@ class ModelLoader:
 
     def load_llm(self):
         """
-        Load and return the LLM model.
+        Load and return the primary LLM (Google Gemini) and fallback LLM (Groq).
         """
-        print("LLM loading...")
-        model_name=self.config["llm"]["groq"]["model_name"]
-        print("******this is my key*****")
-        print(self.groq_api_key)
-        groq_model=ChatGroq(model=model_name,api_key=self.groq_api_key)
-        print(groq_model.invoke("hi"))
-        
-        return groq_model  
+        print("Loading Primary LLM (Google Gemini)...")
+        google_cfg = self.config.get("llm", {}).get("primary") or self.config.get("llm", {}).get("google", {})
+        google_model_name = google_cfg.get("model_name", "gemini-3.1-flash-lite")
+        primary_llm = ChatGoogleGenerativeAI(
+            model=google_model_name,
+            google_api_key=os.getenv("GOOGLE_API_KEY")
+        )
+
+        print("Loading Fallback LLM (Groq)...")
+        groq_cfg = self.config.get("llm", {}).get("fallback") or self.config.get("llm", {}).get("groq", {})
+        groq_model_name = groq_cfg.get("model_name", "openai/gpt-oss-120b")
+        fallback_llm = ChatGroq(
+            model=groq_model_name,
+            api_key=self.groq_api_key
+        )
+
+        return primary_llm, fallback_llm

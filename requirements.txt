@@ -9,5 +9,7 @@ fastapi[all]
 uvicorn
 langchain-pinecone
 pypdf
+langchain_groq
+docx2txt
 
 -e .

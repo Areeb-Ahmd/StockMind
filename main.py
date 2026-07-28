@@ -2,9 +2,11 @@ from fastapi import FastAPI, UploadFile, File, Request
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from starlette.responses import JSONResponse
+from langchain_core.messages import HumanMessage
 from data_ingestion.ingestion_pipeline import DataIngestion
 from agent.workflow import GraphBuilder
 from data_models.models import *
+from utils.response_formatter import extract_text_content
 
 app = FastAPI()
 
@@ -32,14 +34,12 @@ async def query_chatbot(request: QuestionRequest):
         graph_service.build()
         graph = graph_service.get_graph()
         
-        # Assuming request is a pydantic object like: {"question": "your text"}
-        messages={"messages": [request.question]}
-        
-        result = graph.invoke({"messages": messages})
+        result = graph.invoke({"messages": [HumanMessage(content=request.question)]})
         
         # If result is dict with messages:
-        if isinstance(result, dict) and "messages" in result:
-            final_output = result["messages"][-1].content  # Last AI response
+        if isinstance(result, dict) and "messages" in result and result["messages"]:
+            raw_content = result["messages"][-1].content
+            final_output = extract_text_content(raw_content)
         else:
             final_output = str(result)
         

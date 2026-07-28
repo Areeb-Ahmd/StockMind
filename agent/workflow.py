@@ -11,12 +11,17 @@ class State(TypedDict):
 
 class GraphBuilder:
     def __init__(self):
-        self.model_loader=ModelLoader()
-        self.llm = self.model_loader.load_llm()
+        self.model_loader = ModelLoader()
+        self.primary_llm, self.fallback_llm = self.model_loader.load_llm()
         self.tools = [retriever_tool, financials_tool, tavilytool]
-        llm_with_tools = self.llm.bind_tools(tools=self.tools)
-        self.llm_with_tools = llm_with_tools
+
+        primary_with_tools = self.primary_llm.bind_tools(tools=self.tools)
+        fallback_with_tools = self.fallback_llm.bind_tools(tools=self.tools)
+
+        # Automatic failover: if primary (Gemini) hits rate limit or error, use fallback (Groq)
+        self.llm_with_tools = primary_with_tools.with_fallbacks([fallback_with_tools])
         self.graph = None
+
     
     def _chatbot_node(self,state:State):
         return {"messages": [self.llm_with_tools.invoke(state["messages"])]}

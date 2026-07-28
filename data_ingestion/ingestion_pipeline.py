@@ -83,7 +83,7 @@ class DataIngestion:
             if index_name not in [i.name for i in pinecone_client.list_indexes()]:
                 pinecone_client.create_index(
                     name=index_name,
-                    dimension=768,
+                    dimension=3072,
                     metric="cosine",
                     spec=ServerlessSpec(cloud="aws", region="us-east-1"),
                 )

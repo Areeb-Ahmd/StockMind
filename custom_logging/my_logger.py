@@ -17,4 +17,4 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
-logger = logging.getLogger("agentic-trading-bot")
+logger = logging.getLogger("stockmind")

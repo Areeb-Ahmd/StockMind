@@ -1,4 +1,4 @@
-# Agentic Trading Bot
+# StockMind – Agentic Stock Market Assistant
 
 An LLM-powered, tool-augmented chatbot for stock market research and financial analysis, built with LangGraph, LangChain, and a Retrieval-Augmented Generation (RAG) pipeline backed by Pinecone.
 
@@ -57,7 +57,7 @@ The system is exposed via a **FastAPI** backend with two endpoints (`/upload` an
 ├── data_models/
 │   └── models.py              # Pydantic schemas (QuestionRequest, RagToolSchema)
 ├── exception/
-│   └── exceptions.py          # Custom TradingBotException with traceback details
+│   └── exceptions.py          # Custom StockMindException with traceback details
 ├── fallback_data/             # Sample documents (PDFs, DOCX) for the knowledge base
 ├── notebook/
 │   └── experiments.ipynb      # Jupyter notebook for experimentation
@@ -93,8 +93,8 @@ The system is exposed via a **FastAPI** backend with two endpoints (`/upload` an
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/Areeb-Ahmd/Agentic-Trading-Bot.git
-   cd Agentic-Trading-Bot
+   git clone https://github.com/Areeb-Ahmd/StockMind.git
+   cd StockMind
    ```
 
 2. **Create and activate a virtual environment:**
@@ -112,7 +112,7 @@ The system is exposed via a **FastAPI** backend with two endpoints (`/upload` an
    pip install -r requirements.txt
    ```
 
-   This will also install the project itself in editable mode (via `-e .` in `requirements.txt`), which runs `setup.py` and installs the package as `agentic-trading-bot`.
+   This will also install the project itself in editable mode (via `-e .` in `requirements.txt`), which runs `setup.py` and installs the package as `stockmind`.
 
 ## Configuration
 
@@ -136,7 +136,7 @@ Model parameters, retriever settings, and ingestion behavior are configured in `
 
 ```yaml
 vector_db:
-  index_name: "agentic-trading-bot-vdb"
+  index_name: "stockmind-vdb"
 
 ingestion:
   batch_size: 40

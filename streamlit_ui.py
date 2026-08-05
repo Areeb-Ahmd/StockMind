@@ -1,18 +1,18 @@
 import streamlit as st
 import requests
-from exception.exceptions import TradingBotException
+from exception.exceptions import StockMindException
 import sys
 
 BASE_URL = "http://localhost:8000"  # Backend endpoint
 
 st.set_page_config(
-    page_title="📈 Stock Market Agentic Chatbot",
+    page_title="StockMind – Agentic Stock Market Assistant",
     page_icon="📈",
     layout="centered",
     initial_sidebar_state="expanded",
 )
 
-st.title("📈 Stock Market Agentic Chatbot")
+st.title("📈 StockMind – Agentic Stock Market Assistant")
 
 # Initialize chat history
 if "messages" not in st.session_state:
@@ -42,7 +42,7 @@ with st.sidebar:
                         else:
                             st.error("❌ Upload failed: " + response.text)
                 except Exception as e:
-                    raise TradingBotException(e, sys)
+                    raise StockMindException(e, sys)
             else:
                 st.warning("Some files were empty or unreadable.")
 
@@ -77,4 +77,4 @@ if submit_button and user_input.strip():
             st.error("❌ Bot failed to respond: " + response.text)
 
     except Exception as e:
-        raise TradingBotException(e, sys)
+        raise StockMindException(e, sys)

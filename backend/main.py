@@ -1,3 +1,5 @@
+import os
+import uvicorn
 from fastapi import FastAPI, UploadFile, File, Request
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
@@ -8,7 +10,7 @@ from agent.workflow import GraphBuilder
 from data_models.models import *
 from utils.response_formatter import extract_text_content
 
-app = FastAPI()
+app = FastAPI(title="StockMind API", version="0.0.1")
 
 app.add_middleware(
     CORSMiddleware,
@@ -17,6 +19,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+async def root():
+    return {"service": "StockMind API", "status": "running"}
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
 
 @app.post("/upload")
 async def uploaded_files(files: List[UploadFile] = File(...)):
@@ -46,3 +56,7 @@ async def query_chatbot(request: QuestionRequest):
         return {"answer": final_output}
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8080))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)

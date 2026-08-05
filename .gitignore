@@ -1,11 +1,30 @@
-env
-venv
+# Environments
+env/
+venv/
 .env
-*.egg-info
+!.env.example
+key.json
+
+# Build and Egg info
+*.egg-info/
+dist/
+build/
 
 # Python Cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.pytest_cache/
+
+# Application logs
 logs/
+*.log
+
+# Docker
+docker-compose.override.yml
+*.tar
+
+# OS generated
+.DS_Store
+Thumbs.db

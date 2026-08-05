@@ -1,9 +1,10 @@
+import os
+import sys
 import streamlit as st
 import requests
-from exception.exceptions import StockMindException
-import sys
 
-BASE_URL = "http://localhost:8000"  # Backend endpoint
+# Backend endpoint (dynamically loaded from environment variable, fallback to localhost:8000)
+BASE_URL = os.environ.get("BACKEND_URL", "http://localhost:8000").rstrip("/")
 
 st.set_page_config(
     page_title="StockMind – Agentic Stock Market Assistant",
@@ -42,7 +43,7 @@ with st.sidebar:
                         else:
                             st.error("❌ Upload failed: " + response.text)
                 except Exception as e:
-                    raise StockMindException(e, sys)
+                    st.error(f"❌ Error connecting to backend: {e}")
             else:
                 st.warning("Some files were empty or unreadable.")
 
@@ -72,9 +73,9 @@ if submit_button and user_input.strip():
         if response.status_code == 200:
             answer = response.json().get("answer", "No answer returned.")
             st.session_state.messages.append({"role": "bot", "content": answer})
-            st.rerun()  # 🔁 fixed here
+            st.rerun()
         else:
             st.error("❌ Bot failed to respond: " + response.text)
 
     except Exception as e:
-        raise StockMindException(e, sys)
+        st.error(f"❌ Error connecting to backend: {e}")

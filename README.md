@@ -12,24 +12,23 @@ This project implements a conversational AI agent that can answer questions abou
 
 The agent is orchestrated as a **LangGraph state graph** with a ReAct-style tool-use loop: the LLM decides which tools to call (if any), the tool results are fed back, and the LLM produces a final answer. A primary LLM (Google Gemini) is used with automatic failover to a fallback LLM (Groq) if the primary encounters errors or rate limits.
 
-The system is exposed via a **FastAPI** backend with two endpoints (`/upload` and `/query`) and a **Streamlit** frontend that provides a chat interface with document upload capabilities.
+The system is containerized as a monorepo with a **FastAPI** backend (`backend/`) and a **Streamlit** frontend (`frontend/`), deployed automatically to **Google Cloud Run** via **GitHub Actions CI/CD**.
 
 ## Key Features
 
+- **Monorepo architecture** with clean separation between FastAPI backend and Streamlit UI.
+- **Multi-stage Docker builds** for optimized, small production container images.
+- **Docker Compose** integration for zero-friction local multi-container development.
+- **Automated CI/CD** via GitHub Actions deploying to Google Cloud Run (`asia-south1`) on pushes to `main`.
 - **RAG pipeline** with PDF and DOCX ingestion, recursive text splitting, and Pinecone vector storage with configurable batch sizes and rate-limit retry logic.
-- **Multi-tool agent** powered by LangGraph that autonomously selects between a vector store retriever, Tavily web search, and Polygon.io financial data based on the user's question.
+- **Multi-tool agent** powered by LangGraph that autonomously selects between a vector store retriever, Tavily web search, and Polygon.io financial data.
 - **Dual-LLM architecture** with automatic failover from Google Gemini (primary) to Groq (fallback) using LangChain's `with_fallbacks`.
-- **Configurable parameters** via a central YAML config file for embedding models, LLM providers, retriever thresholds, ingestion batching, and tool settings.
-- **Streamlit chat UI** with a sidebar for document upload and a conversational message history.
-- **FastAPI REST API** for programmatic access to document ingestion and querying.
-- **Structured logging** with timestamped log files written to a `logs/` directory.
-- **Custom exception handling** with detailed tracebacks (file name, line number, error message).
 
 ## Tech Stack
 
 | Category | Technology |
 |---|---|
-| Language | Python |
+| Language | Python 3.11 |
 | Agent Framework | LangGraph, LangChain |
 | Primary LLM | Google Gemini (via `langchain-google-genai`) |
 | Fallback LLM | Groq (via `langchain-groq`) |
@@ -39,45 +38,63 @@ The system is exposed via a **FastAPI** backend with two endpoints (`/upload` an
 | Financial Data | Polygon.io (via `polygon` + LangChain `PolygonFinancials`) |
 | Backend API | FastAPI, Uvicorn |
 | Frontend | Streamlit |
-| Document Parsing | PyPDF (`pypdf`), Docx2txt (`docx2txt`) |
-| Configuration | YAML (`PyYAML`), python-dotenv |
+| Containerization | Docker (Multi-Stage), Docker Compose |
+| Cloud Infrastructure | Google Cloud Run, Artifact Registry, Secret Manager |
+| CI/CD Pipeline | GitHub Actions |
 
 ## Project Structure
 
 ```
 .
-├── agent/
-│   └── workflow.py            # LangGraph state graph definition (chatbot + tool nodes)
-├── config/
-│   └── config.yaml            # Central configuration (models, retriever, ingestion, tools)
-├── custom_logging/
-│   └── my_logger.py           # Logging setup with timestamped log files
-├── data_ingestion/
-│   └── ingestion_pipeline.py  # Document loading, chunking, and Pinecone ingestion
-├── data_models/
-│   └── models.py              # Pydantic schemas (QuestionRequest, RagToolSchema)
-├── exception/
-│   └── exceptions.py          # Custom StockMindException with traceback details
-├── fallback_data/             # Sample documents (PDFs, DOCX) for the knowledge base
-├── notebook/
-│   └── experiments.ipynb      # Jupyter notebook for experimentation
-├── prompt_library/
-│   └── prompt.py              # Placeholder for prompt templates (currently empty)
-├── toolkit/
-│   └── tools.py               # Tool definitions (retriever, Tavily search, Polygon financials)
-├── utils/
-│   ├── config_loader.py       # YAML config file loader
-│   ├── model_loaders.py       # Embedding and LLM model initialization
-│   └── response_formatter.py  # Extracts clean text from LLM response content
-├── main.py                    # FastAPI application (POST /upload, POST /query)
-├── streamlit_ui.py            # Streamlit chat frontend
-├── setup.py                   # Package setup configuration
-└── requirements.txt           # Python dependencies
+├── .github/
+│   └── workflows/
+│       └── deploy.yml          # GitHub Actions deployment workflow
+│
+├── backend/
+│   ├── Dockerfile              # Multi-stage Dockerfile for FastAPI backend
+│   ├── agent/
+│   │   └── workflow.py        # LangGraph state graph definition
+│   ├── config/
+│   │   └── config.yaml        # Configuration parameters
+│   ├── custom_logging/
+│   │   └── my_logger.py       # Custom logger setup
+│   ├── data_ingestion/
+│   │   └── ingestion_pipeline.py # Document ingestion pipeline
+│   ├── data_models/
+│   │   └── models.py          # Pydantic schemas
+│   ├── exception/
+│   │   └── exceptions.py      # Custom StockMindException
+│   ├── fallback_data/         # Knowledge base fallback documents
+│   ├── prompt_library/
+│   │   └── prompt.py          # System prompt definitions
+│   ├── toolkit/
+│   │   └── tools.py           # Retriever, Tavily, & Polygon tools
+│   ├── utils/
+│   │   ├── config_loader.py   # YAML config loader
+│   │   ├── model_loaders.py   # LLM and Embedding loaders
+│   │   └── response_formatter.py
+│   ├── main.py                 # FastAPI backend entrypoint (REST API)
+│   ├── requirements.txt        # Backend Python dependencies
+│   └── setup.py                # Package setup script
+│
+├── frontend/
+│   ├── Dockerfile              # Multi-stage Dockerfile for Streamlit UI
+│   ├── streamlit_ui.py         # Streamlit chat interface
+│   ├── requirements.txt        # Frontend Python dependencies
+│   └── .streamlit/
+│       └── config.toml         # Streamlit server config
+│
+├── docker-compose.yml          # Local multi-container development orchestration
+├── .dockerignore               # Docker build ignore rules
+├── .env.example                # Template for required environment variables
+├── .gitignore                  # Git ignore rules
+└── README.md
 ```
 
 ## Prerequisites
 
-- **Python 3.x** (the project uses a standard `venv`; no specific version is pinned)
+- **Docker & Docker Compose** (for local containerized execution)
+- **Python 3.11+** (if running without Docker)
 - API keys for the following services:
 
 | Environment Variable | Service | Purpose |
@@ -88,119 +105,59 @@ The system is exposed via a **FastAPI** backend with two endpoints (`/upload` an
 | `TAVILY_API_KEY` | Tavily | Web search tool |
 | `POLYGON_API_KEY` | Polygon.io | Financial data tool |
 
-## Installation
+---
+
+## Local Quickstart with Docker Compose (Recommended)
 
 1. **Clone the repository:**
-
    ```bash
    git clone https://github.com/Areeb-Ahmd/StockMind.git
    cd StockMind
    ```
 
-2. **Create and activate a virtual environment:**
-
+2. **Configure environment variables:**
    ```bash
-   python -m venv venv
+   cp .env.example .env
+   ```
+   Edit `.env` and fill in your actual 5 API keys.
+
+3. **Launch local containers:**
+   ```bash
+   docker compose up --build
    ```
 
-   - Linux/macOS: `source venv/bin/activate`
-   - Windows: `venv\Scripts\activate`
+4. **Access services:**
+   - **Frontend UI**: [http://localhost:8501](http://localhost:8501)
+   - **Backend API**: [http://localhost:8000](http://localhost:8000)
+   - **Backend Healthcheck**: [http://localhost:8000/health](http://localhost:8000/health)
 
-3. **Install dependencies:**
+---
 
+## Deployment to Google Cloud Run (CI/CD)
+
+The project includes a complete **GitHub Actions** CI/CD pipeline (`.github/workflows/deploy.yml`) that automatically builds multi-stage Docker images and deploys them to **Google Cloud Run** (`asia-south1`) whenever new code is pushed to the `main` branch.
+
+### Deployment Prerequisites & GCP Setup
+
+1. **GCP Project**: `stockmind-504615`
+2. **Enable Required APIs**:
    ```bash
-   pip install -r requirements.txt
+   gcloud services enable run.googleapis.com artifactregistry.googleapis.com secretmanager.googleapis.com
    ```
+3. **Create Artifact Registry Repository**:
+   ```bash
+   gcloud artifacts repositories create stockmind-repo \
+     --repository-format=docker \
+     --location=asia-south1
+   ```
+4. **Configure Secrets in GitHub Repository**:
+   Add the following under **GitHub Repo → Settings → Secrets and variables → Actions**:
+   - `GCP_PROJECT_ID`: `stockmind-504615`
+   - `GCP_REGION`: `asia-south1`
+   - `GCP_SA_KEY`: JSON service account key with Cloud Run Admin, Artifact Registry Writer, and Secret Manager Accessor permissions.
+   - `GOOGLE_API_KEY`, `GROQ_API_KEY`, `PINECONE_API_KEY`, `TAVILY_API_KEY`, `POLYGON_API_KEY`.
 
-   This will also install the project itself in editable mode (via `-e .` in `requirements.txt`), which runs `setup.py` and installs the package as `stockmind`.
-
-## Configuration
-
-### Environment Variables
-
-Create a `.env` file in the project root with your API keys:
-
-```env
-GOOGLE_API_KEY="your-google-api-key"
-GROQ_API_KEY="your-groq-api-key"
-PINECONE_API_KEY="your-pinecone-api-key"
-TAVILY_API_KEY="your-tavily-api-key"
-POLYGON_API_KEY="your-polygon-api-key"
-```
-
-The application loads these via `python-dotenv` at startup. All five keys are required for full functionality.
-
-### YAML Configuration
-
-Model parameters, retriever settings, and ingestion behavior are configured in `config/config.yaml`:
-
-```yaml
-vector_db:
-  index_name: "stockmind-vdb"
-
-ingestion:
-  batch_size: 40
-  delay_between_batches: 5.0
-  max_retries: 5
-  retry_initial_delay: 10.0
-
-retriever:
-  top_k: 3
-  score_threshold: 0.5
-
-embedding_model:
-  provider: "google"
-  model_name: "models/gemini-embedding-001"
-
-llm:
-  primary:
-    provider: "google"
-    model_name: "gemini-3.1-flash-lite"
-  fallback:
-    provider: "groq"
-    model_name: "openai/gpt-oss-120b"
-
-tools:
-  tavily:
-    max_results: 5
-```
-
-## Usage
-
-### 1. Start the FastAPI backend
-
-```bash
-uvicorn main:app --reload
-```
-
-The API server starts on `http://localhost:8000` by default with two endpoints:
-
-- **`POST /upload`** -- Accepts multipart file uploads (PDF, DOCX). Files are parsed, chunked, embedded, and stored in Pinecone.
-- **`POST /query`** -- Accepts a JSON body `{"question": "your question"}` and returns `{"answer": "..."}` from the agent.
-
-### 2. Launch the Streamlit UI
-
-In a separate terminal:
-
-```bash
-streamlit run streamlit_ui.py
-```
-
-The Streamlit app connects to the FastAPI backend at `http://localhost:8000`. Use the sidebar to upload documents and the main chat area to ask questions.
-
-### Example API usage with curl
-
-```bash
-# Upload documents
-curl -X POST http://localhost:8000/upload \
-  -F "files=@stock_market.pdf" \
-  -F "files=@trading_basics.pdf"
-
-# Query the agent
-curl -X POST http://localhost:8000/query \
-  -H "Content-Type: application/json" \
-  -d '{"question": "What is the NIFTY 50 index?"}'
-```
+---
 
 ## How It Works
 
@@ -227,39 +184,12 @@ User Question
                    └────────────┘ └───────────┘ └──────────────┘
 ```
 
-1. **Document ingestion**: Users upload PDF or DOCX files via the `/upload` endpoint or the Streamlit sidebar. The `DataIngestion` pipeline loads the documents, splits them into 1000-character chunks (with 200-character overlap) using `RecursiveCharacterTextSplitter`, embeds them with Google's `gemini-embedding-001` model, and stores the vectors in a Pinecone serverless index. Ingestion is batched with configurable rate-limit retry logic (exponential backoff).
+1. **Document Ingestion**: Users upload PDF or DOCX files via Streamlit or `/upload`. The `DataIngestion` pipeline processes, chunks, embeds using Gemini embeddings, and stores vectors in Pinecone.
+2. **ReAct Agent Execution**: Questions sent to `/query` invoke a LangGraph state graph. Google Gemini (or Groq fallback) decides which tool (`retriever_tool`, `tavilytool`, `financials_tool`) to call.
+3. **Response Synthesis**: Tool findings are passed back to the LLM to format a final markdown answer.
 
-2. **Query processing**: When a user sends a question, the FastAPI backend constructs a LangGraph `StateGraph` with two nodes -- a **chatbot node** (the LLM) and a **tools node** (`ToolNode` with all three tools). The graph starts at the chatbot node.
+---
 
-3. **Tool selection**: The LLM (Google Gemini, with Groq as fallback) decides whether to invoke tools based on the question. LangGraph's `tools_condition` routes to the tools node if the LLM produces tool calls, or to the end if it produces a final answer.
+## License & Disclaimer
 
-4. **Tool execution**: The `ToolNode` executes the selected tools:
-   - **`retriever_tool`**: Queries the Pinecone vector store using similarity search with a score threshold.
-   - **`tavilytool`**: Performs an advanced web search via the Tavily API.
-   - **`financials_tool`**: Fetches company financial data from Polygon.io.
-
-5. **Response generation**: Tool results are sent back to the chatbot node. The LLM synthesizes a final answer incorporating the tool outputs. The response is extracted using `extract_text_content` (which handles both plain strings and structured content blocks) and returned to the user.
-
-## Disclaimer
-
-This project is intended for **educational and research purposes only**. It does not constitute financial advice, and no part of this software should be used to make real trading or investment decisions. The authors are not responsible for any financial losses incurred from the use of this software. Always consult a qualified financial advisor before making investment decisions.
-
-## Contributing
-
-Contributions are welcome. To contribute:
-
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature/your-feature`).
-3. Commit your changes (`git commit -m "Add your feature"`).
-4. Push to your branch (`git push origin feature/your-feature`).
-5. Open a Pull Request.
-
-## License
-
-<!-- TODO: No LICENSE file found in the repository. Add a LICENSE file and update this section. -->
-
-This project does not currently include a license file. Please contact the author for licensing information.
-
-## Author
-
-**Syed Areeb Ahmad** -- ahmad.syedareeb7@gmail.com
+This project is intended for **educational and research purposes only**. It does not constitute financial advice.

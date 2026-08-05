@@ -12,7 +12,7 @@ from utils.config_loader import load_config
 from pinecone import ServerlessSpec, Pinecone
 from uuid import uuid4
 import sys
-from exception.exceptions import TradingBotException
+from exception.exceptions import StockMindException
 from custom_logging.my_logger import logger
 
 class DataIngestion:
@@ -28,7 +28,7 @@ class DataIngestion:
             self._load_env_variables()
             self.config = load_config()
         except Exception as e:
-            raise TradingBotException(e, sys)
+            raise StockMindException(e, sys)
 
     def _load_env_variables(self):
         try:
@@ -46,7 +46,7 @@ class DataIngestion:
             self.google_api_key = os.getenv("GOOGLE_API_KEY")
             self.pinecone_api_key = os.getenv("PINECONE_API_KEY")
         except Exception as e:
-            raise TradingBotException(e, sys)
+            raise StockMindException(e, sys)
 
     def load_documents(self, uploaded_files) -> List[Document]:
         try:
@@ -69,7 +69,7 @@ class DataIngestion:
                     print(f"Unsupported file type: {uploaded_file.filename}")
             return documents
         except Exception as e:
-            raise TradingBotException(e, sys)
+            raise StockMindException(e, sys)
 
     def store_in_vector_db(self, documents: List[Document]):
         try:
@@ -143,7 +143,7 @@ class DataIngestion:
             logger.info("Successfully ingested all document chunks into vector DB.")
             print("Successfully ingested all document chunks into vector DB.")
         except Exception as e:
-            raise TradingBotException(e, sys)
+            raise StockMindException(e, sys)
 
     def run_pipeline(self, uploaded_files):
         try:
@@ -153,7 +153,7 @@ class DataIngestion:
                 return
             self.store_in_vector_db(documents)
         except Exception as e:
-            raise TradingBotException(e, sys)
+            raise StockMindException(e, sys)
 
 if __name__ == '__main__':
     pass

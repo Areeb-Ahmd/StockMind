@@ -1,5 +1,5 @@
 vector_db:
-  index_name: "agentic-trading-bot-vdb"
+  index_name: "stockmind-vdb"
 
 ingestion:
   batch_size: 40

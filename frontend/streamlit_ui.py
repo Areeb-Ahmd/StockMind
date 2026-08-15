@@ -3,8 +3,8 @@ import sys
 import streamlit as st
 import requests
 
-# Backend endpoint (dynamically loaded from environment variable, fallback to localhost:8000)
-BASE_URL = os.environ.get("BACKEND_URL", "http://localhost:8000").rstrip("/")
+# Backend endpoint (dynamically loaded from environment variable, fallback to localhost:8080)
+BASE_URL = os.environ.get("BACKEND_URL", "http://localhost:8080").rstrip("/")
 
 st.set_page_config(
     page_title="StockMind – Agentic Stock Market Assistant",
@@ -47,35 +47,28 @@ with st.sidebar:
             else:
                 st.warning("Some files were empty or unreadable.")
 
-# Display chat history
-st.header("💬 Chat")
-for chat in st.session_state.messages:
-    if chat["role"] == "user":
-        st.markdown(f"**🧑 You:** {chat['content']}")
-    else:
-        st.markdown(f"**🤖 Bot:** {chat['content']}")
+# Display chat history using native Streamlit chat bubbles
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-# Chat input box at bottom
-with st.form(key="chat_form", clear_on_submit=True):
-    user_input = st.text_input("Your message", placeholder="e.g. Tell me about NIFTY 50")
-    submit_button = st.form_submit_button("Send")
+# Bottom chat input
+if prompt := st.chat_input("Ask StockMind a question (e.g. Tell me about NIFTY 50)..."):
+    # Append and render user message
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
 
-if submit_button and user_input.strip():
-    try:
-        # Show user message
-        st.session_state.messages.append({"role": "user", "content": user_input})
-
-        # Show thinking spinner while backend processes
-        with st.spinner("Bot is thinking..."):
-            payload = {"question": user_input}
-            response = requests.post(f"{BASE_URL}/query", json=payload)
-
-        if response.status_code == 200:
-            answer = response.json().get("answer", "No answer returned.")
-            st.session_state.messages.append({"role": "bot", "content": answer})
-            st.rerun()
-        else:
-            st.error("❌ Bot failed to respond: " + response.text)
-
-    except Exception as e:
-        st.error(f"❌ Error connecting to backend: {e}")
+    # Render assistant response with spinner
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            try:
+                response = requests.post(f"{BASE_URL}/query", json={"question": prompt})
+                if response.status_code == 200:
+                    answer = response.json().get("answer", "No answer returned.")
+                    st.markdown(answer)
+                    st.session_state.messages.append({"role": "assistant", "content": answer})
+                else:
+                    st.error("❌ Bot failed to respond: " + response.text)
+            except Exception as e:
+                st.error(f"❌ Error connecting to backend: {e}")

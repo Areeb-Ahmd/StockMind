@@ -1,0 +1,876 @@
+/* StockMind Light Theme Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* StockMind Light Theme Design System - Warm Copper & Ice Blue Canvas */
+:root,
+html,
+body,
+.stApp,
+[data-testid="stAppViewContainer"],
+[data-testid="stMain"] {
+    --bg-main: radial-gradient(circle at 85% 15%, rgba(212, 122, 68, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 15% 85%, rgba(217, 119, 6, 0.10) 0%, transparent 50%),
+                radial-gradient(circle at 50% 0%, rgba(212, 122, 68, 0.08) 0%, transparent 40%),
+                linear-gradient(135deg, #FFFFFF 0%, #FFF8F3 45%, #F7EFE9 100%) !important;
+    --card-bg: rgba(255, 255, 255, 0.98) !important;
+    --card-border: rgba(203, 213, 225, 0.85) !important;
+    --card-hover-border: rgba(212, 122, 68, 0.8) !important;
+    --header-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(254, 245, 240, 0.95) 100%) !important;
+    --sidebar-bg: radial-gradient(circle at 50% 0%, rgba(30, 58, 138, 0.05) 0%, transparent 60%),
+                  linear-gradient(180deg, #F0F4F8 0%, #E2E8F0 50%, #D5E0EA 100%) !important;
+    --copper-primary: #D47A44 !important;
+    --copper-hover: #B65927 !important;
+    --amber-gold: #D97706 !important;
+    --text-main: #0F172A !important;
+    --text-muted: #475569 !important;
+    --user-msg-bg: linear-gradient(135deg, rgba(254, 245, 240, 0.95) 0%, rgba(252, 232, 221, 0.85) 100%) !important;
+    --input-bg: rgba(255, 255, 255, 0.98) !important;
+    --shadow-color: rgba(212, 122, 68, 0.08) !important;
+}
+
+/* Global Viewport Layout & Warm Copper Ambient Mesh Canvas */
+html,
+body,
+.stApp,
+[data-testid="stAppViewContainer"] {
+    background: radial-gradient(circle at 85% 15%, rgba(212, 122, 68, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 15% 85%, rgba(217, 119, 6, 0.10) 0%, transparent 50%),
+                radial-gradient(circle at 50% 0%, rgba(212, 122, 68, 0.08) 0%, transparent 40%),
+                linear-gradient(135deg, #FFFFFF 0%, #FFF8F3 45%, #F7EFE9 100%) !important;
+    color: var(--text-main) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+[data-testid="stMain"] {
+    background: transparent !important;
+}
+
+.main .block-container {
+    padding-top: 1.5rem !important;
+    padding-bottom: 3rem !important;
+    max-width: 1200px !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.brand-title {
+    font-family: 'Outfit', sans-serif !important;
+    letter-spacing: -0.02em;
+    color: var(--text-main) !important;
+}
+
+/* Hide default streamlit header bar */
+header[data-testid="stHeader"] {
+    background: transparent !important;
+}
+
+/* App Header Container */
+.main-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 1.5rem;
+    background: var(--header-bg);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.brand-logo-img {
+    height: 52px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(212, 122, 68, 0.2));
+    transition: transform 0.3s ease;
+}
+
+.brand-logo-img:hover {
+    transform: scale(1.02);
+}
+
+/* Status Indicator Pill */
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 20px;
+    color: #059669;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #10B981;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #10B981;
+    animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+/* Hero Section */
+.hero-section {
+    padding: 0.5rem 0 1rem 0;
+    margin-bottom: 1.25rem;
+}
+
+.hero-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-weight: 400;
+}
+
+/* Prompt Chips Section */
+.chip-section-title {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.75rem;
+}
+
+div.stButton>button {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--card-border) !important;
+    color: var(--text-main) !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 1rem !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 8px var(--shadow-color) !important;
+}
+
+div.stButton>button:hover {
+    background: linear-gradient(135deg, #D47A44 0%, #B65927 100%) !important;
+    border-color: #E89459 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 6px 20px rgba(212, 122, 68, 0.35) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Seamless Modern AI Chat Interface Styling (ChatGPT / Perplexity Style) */
+.stChatMessage {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 0.85rem 1rem !important;
+    margin-bottom: 0.75rem !important;
+    color: var(--text-main) !important;
+    box-shadow: none !important;
+}
+
+div[data-testid="stChatMessageUser"] {
+    background: linear-gradient(135deg, rgba(241, 245, 249, 0.95) 0%, rgba(226, 232, 240, 0.9) 100%) !important;
+    border: 1px solid rgba(203, 213, 225, 0.6) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04) !important;
+}
+
+div[data-testid="stChatMessageAssistant"] {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid var(--card-border) !important;
+    border-left: 3px solid var(--copper-primary) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 4px 16px var(--shadow-color) !important;
+}
+
+/* Chat Message Avatar & Content Layout Fix */
+[data-testid="stChatMessageAvatar"] {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    max-width: 38px !important;
+    max-height: 38px !important;
+    background: transparent !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+[data-testid="stChatMessageAvatar"] img {
+    width: 38px !important;
+    height: 38px !important;
+    max-width: 38px !important;
+    max-height: 38px !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 2px 6px rgba(212, 122, 68, 0.25)) !important;
+    border-radius: 50% !important;
+}
+
+[data-testid="stChatMessageContent"] {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    max-width: 100% !important;
+}
+
+/* Native In-Flow Pill Chat Input Form Styling */
+div[data-testid="stForm"] {
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    margin-top: 1.5rem !important;
+    margin-bottom: 2.5rem !important;
+    box-shadow: none !important;
+}
+
+/* Glassmorphic Pill Input Bar */
+div[data-testid="stForm"] div[data-baseweb="input"] {
+    border-radius: 28px !important;
+    border: 1.5px solid var(--card-border) !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(16px) !important;
+    box-shadow: 0 4px 20px var(--shadow-color) !important;
+    padding: 0.25rem 0.5rem !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+div[data-testid="stForm"] div[data-baseweb="input"]:focus-within {
+    border-color: var(--copper-primary) !important;
+    box-shadow: 0 0 24px rgba(212, 122, 68, 0.35) !important;
+}
+
+div[data-testid="stForm"] input {
+    font-size: 0.92rem !important;
+    color: var(--text-main) !important;
+    padding: 0.65rem 1rem !important;
+    background: transparent !important;
+}
+
+div[data-testid="stForm"] input::placeholder {
+    color: #94A3B8 !important;
+    font-weight: 400 !important;
+}
+
+/* Circular Send Submit Button */
+div[data-testid="stForm"] div.stButton>button {
+    background: linear-gradient(135deg, #D47A44 0%, #B65927 100%) !important;
+    border: none !important;
+    color: #FFFFFF !important;
+    border-radius: 24px !important;
+    padding: 0.7rem 0 !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(212, 122, 68, 0.35) !important;
+    transition: all 0.2s ease !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+div[data-testid="stForm"] div.stButton>button:hover {
+    background: linear-gradient(135deg, #E88950 0%, #C4622D 100%) !important;
+    transform: scale(1.04) translateY(-1px) !important;
+    box-shadow: 0 6px 18px rgba(212, 122, 68, 0.45) !important;
+}
+
+/* Production Industry-Standard Footer Design */
+.production-footer {
+    margin-top: 3.5rem !important;
+    margin-bottom: 2rem !important;
+    padding: 2.25rem 2rem 1.5rem 2rem !important;
+    background: var(--card-bg) !important;
+    border: 1px solid var(--card-border) !important;
+    border-top: 3px solid var(--copper-primary) !important;
+    border-radius: 20px !important;
+    backdrop-filter: blur(16px) !important;
+    box-shadow: 0 10px 30px var(--shadow-color) !important;
+    font-family: 'Inter', sans-serif !important;
+    color: var(--text-main) !important;
+}
+
+.prod-footer-header-banner {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding-bottom: 1.25rem !important;
+    margin-bottom: 1.5rem !important;
+    border-bottom: 1px solid var(--card-border) !important;
+}
+
+.prod-footer-brand-tag {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    color: var(--text-muted) !important;
+    letter-spacing: 0.02em !important;
+}
+
+.prod-footer-main {
+    display: grid !important;
+    grid-template-columns: 2.2fr 1fr 1fr 1fr !important;
+    gap: 2rem !important;
+    margin-bottom: 1.75rem !important;
+}
+
+.prod-footer-col.brand-col {
+    padding-right: 1rem !important;
+}
+
+.prod-footer-brand-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.prod-footer-logo {
+    height: 36px !important;
+    width: auto !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 2px 8px rgba(212, 122, 68, 0.3)) !important;
+}
+
+.prod-footer-brand-title {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    color: var(--text-main) !important;
+}
+
+.prod-footer-tagline {
+    font-size: 0.84rem !important;
+    color: var(--text-muted) !important;
+    line-height: 1.55 !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.85rem !important;
+    font-weight: 400 !important;
+}
+
+.prod-footer-heading {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--text-main) !important;
+    margin-bottom: 1.1rem !important;
+    letter-spacing: -0.01em !important;
+}
+
+.prod-footer-links {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.prod-footer-links li {
+    margin-bottom: 0.6rem !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.prod-footer-chevron {
+    color: var(--copper-primary) !important;
+    font-size: 0.75rem !important;
+    margin-right: 8px !important;
+    font-weight: 700 !important;
+}
+
+.tech-icon {
+    font-size: 0.92rem !important;
+    margin-right: 8px !important;
+}
+
+.prod-footer-item {
+    font-size: 0.86rem !important;
+    font-weight: 500 !important;
+    color: var(--text-muted) !important;
+}
+
+.prod-footer-links a {
+    color: var(--text-muted) !important;
+    text-decoration: none !important;
+    font-size: 0.86rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+.prod-footer-social-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: var(--text-muted) !important;
+    text-decoration: none !important;
+    font-size: 0.86rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+.prod-footer-social-link:hover {
+    color: var(--copper-hover) !important;
+    transform: translateX(3px) !important;
+}
+
+.prod-footer-social-link svg {
+    flex-shrink: 0 !important;
+    transition: transform 0.2s ease !important;
+}
+
+.prod-footer-social-link:hover svg {
+    transform: scale(1.15) !important;
+}
+
+.dev-pill-item {
+    margin-top: 1rem !important;
+}
+
+.prod-footer-dev-pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 6px 14px !important;
+    background: rgba(212, 122, 68, 0.08) !important;
+    border: 1px solid rgba(212, 122, 68, 0.3) !important;
+    border-radius: 20px !important;
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    color: var(--copper-primary) !important;
+    box-shadow: 0 2px 8px rgba(212, 122, 68, 0.12) !important;
+}
+
+.dev-dot {
+    width: 6px !important;
+    height: 6px !important;
+    background-color: var(--copper-primary) !important;
+    border-radius: 50% !important;
+    box-shadow: 0 0 6px var(--copper-primary) !important;
+}
+
+/* Regulatory Financial Disclaimer */
+.prod-footer-disclaimer {
+    background: rgba(241, 245, 249, 0.75) !important;
+    border: 1px solid rgba(203, 213, 225, 0.75) !important;
+    border-radius: 12px !important;
+    padding: 0.85rem 1.1rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.prod-footer-disclaimer p {
+    font-size: 0.76rem !important;
+    color: #64748B !important;
+    line-height: 1.55 !important;
+    margin: 0 !important;
+}
+
+.prod-footer-disclaimer strong {
+    color: var(--text-main) !important;
+}
+
+/* Bottom Bar */
+.prod-footer-bottom {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding-top: 1.25rem !important;
+    border-top: 1px solid var(--card-border) !important;
+    font-size: 0.8rem !important;
+    color: var(--text-muted) !important;
+}
+
+.prod-footer-copyright {
+    font-weight: 500 !important;
+}
+
+.prod-footer-meta {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 0.78rem !important;
+}
+
+.prod-footer-meta code {
+    background: rgba(212, 122, 68, 0.1) !important;
+    color: var(--copper-primary) !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    font-family: monospace !important;
+    font-size: 0.76rem !important;
+}
+
+.meta-divider {
+    color: #94A3B8 !important;
+}
+
+/* Responsive Breakdown */
+@media (max-width: 992px) {
+    .prod-footer-main {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1.5rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .prod-footer-main {
+        grid-template-columns: 1fr !important;
+    }
+
+    .prod-footer-bottom {
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+        text-align: center !important;
+    }
+}
+
+
+/* Sidebar Cool & Analytical Ice Blue Customization */
+section[data-testid="stSidebar"] {
+    background: radial-gradient(circle at 50% 0%, rgba(30, 58, 138, 0.05) 0%, transparent 60%),
+                linear-gradient(180deg, #F0F4F8 0%, #E2E8F0 50%, #D5E0EA 100%) !important;
+    border-right: 1px solid rgba(203, 213, 225, 0.9) !important;
+    box-shadow: inset -4px 0 16px rgba(30, 58, 138, 0.02) !important;
+}
+
+section[data-testid="stSidebar"] * {
+    color: var(--text-main) !important;
+}
+
+.sidebar-header {
+    text-align: center;
+    padding: 1rem 0;
+    margin-bottom: 1.25rem;
+}
+
+.sidebar-logo {
+    max-width: 85%;
+    height: auto;
+    filter: drop-shadow(0 4px 16px rgba(212, 122, 68, 0.35));
+}
+
+/* Sidebar Document Intelligence Panel Styling */
+.sidebar-kb-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.4rem !important;
+}
+
+.sidebar-kb-title {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    color: var(--text-main) !important;
+    letter-spacing: -0.01em !important;
+}
+
+.sidebar-kb-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 3px 10px !important;
+    background: rgba(212, 122, 68, 0.1) !important;
+    border: 1px solid rgba(212, 122, 68, 0.25) !important;
+    border-radius: 14px !important;
+    font-size: 0.74rem !important;
+    font-weight: 600 !important;
+    color: var(--copper-primary) !important;
+}
+
+.kb-badge-dot {
+    width: 6px !important;
+    height: 6px !important;
+    background-color: var(--copper-primary) !important;
+    border-radius: 50% !important;
+    box-shadow: 0 0 6px var(--copper-primary) !important;
+}
+
+.sidebar-kb-desc {
+    font-size: 0.82rem !important;
+    color: var(--text-muted) !important;
+    line-height: 1.5 !important;
+    margin-bottom: 1.1rem !important;
+}
+
+/* Custom Streamlit File Uploader Box Styling */
+section[data-testid="stSidebar"] section[data-testid="stFileUploader"] {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1.5px dashed var(--card-border) !important;
+    border-radius: 14px !important;
+    padding: 0.85rem !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 4px 14px var(--shadow-color) !important;
+}
+
+section[data-testid="stSidebar"] section[data-testid="stFileUploader"]:hover {
+    border-color: var(--copper-primary) !important;
+    background: #FFFFFF !important;
+    box-shadow: 0 6px 20px rgba(212, 122, 68, 0.2) !important;
+}
+
+div[data-testid="stFileUploaderDropzone"] {
+    background: transparent !important;
+    border: none !important;
+    padding: 0.5rem 0 !important;
+}
+
+div[data-testid="stFileUploaderDropzone"] span {
+    font-size: 0.84rem !important;
+    font-weight: 500 !important;
+    color: var(--text-main) !important;
+}
+
+div[data-testid="stFileUploaderDropzone"] small {
+    color: var(--text-muted) !important;
+    font-size: 0.76rem !important;
+}
+
+div[data-testid="stFileUploaderDropzone"] button {
+    background: linear-gradient(135deg, rgba(241, 245, 249, 0.95) 0%, rgba(226, 232, 240, 0.9) 100%) !important;
+    border: 1px solid var(--card-border) !important;
+    color: var(--text-main) !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+    padding: 0.45rem 0.95rem !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 6px var(--shadow-color) !important;
+}
+
+div[data-testid="stFileUploaderDropzone"] button:hover {
+    background: linear-gradient(135deg, #D47A44 0%, #B65927 100%) !important;
+    color: #FFFFFF !important;
+    border-color: #E88950 !important;
+    box-shadow: 0 4px 14px rgba(212, 122, 68, 0.35) !important;
+}
+
+/* Sidebar Primary Action Button Styling */
+section[data-testid="stSidebar"] div.stButton>button {
+    background: linear-gradient(135deg, #D47A44 0%, #B65927 100%) !important;
+    border: none !important;
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    border-radius: 12px !important;
+    padding: 0.7rem 1rem !important;
+    margin-top: 0.85rem !important;
+    box-shadow: 0 4px 16px rgba(212, 122, 68, 0.35) !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+section[data-testid="stSidebar"] div.stButton>button:hover {
+    background: linear-gradient(135deg, #E88950 0%, #C4622D 100%) !important;
+    box-shadow: 0 6px 22px rgba(212, 122, 68, 0.5) !important;
+    transform: translateY(-1.5px) !important;
+}
+
+background: linear-gradient(135deg, rgba(241, 245, 249, 0.95) 0%, rgba(226, 232, 240, 0.9) 100%) !important;
+border: 1px solid var(--card-border) !important;
+color: var(--text-main) !important;
+font-size: 0.8rem !important;
+font-weight: 600 !important;
+border-radius: 10px !important;
+padding: 0.45rem 0.95rem !important;
+transition: all 0.2s ease !important;
+box-shadow: 0 2px 6px var(--shadow-color) !important;
+}
+
+div[data-testid="stFileUploaderDropzone"] button:hover {
+    background: linear-gradient(135deg, #D47A44 0%, #B65927 100%) !important;
+    color: #FFFFFF !important;
+    border-color: #E88950 !important;
+    box-shadow: 0 4px 14px rgba(212, 122, 68, 0.35) !important;
+}
+
+/* Sidebar Primary Action Button Styling */
+section[data-testid="stSidebar"] div.stButton>button {
+    background: linear-gradient(135deg, #D47A44 0%, #B65927 100%) !important;
+    border: none !important;
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    border-radius: 12px !important;
+    padding: 0.7rem 1rem !important;
+    margin-top: 0.85rem !important;
+    box-shadow: 0 4px 16px rgba(212, 122, 68, 0.35) !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+section[data-testid="stSidebar"] div.stButton>button:hover {
+    background: linear-gradient(135deg, #E88950 0%, #C4622D 100%) !important;
+    box-shadow: 0 6px 22px rgba(212, 122, 68, 0.5) !important;
+    transform: translateY(-1.5px) !important;
+}
+
+/* Sidebar Footer Component Styling */
+.sidebar-footer-container {
+    margin-top: 1.5rem !important;
+    padding-top: 0.5rem !important;
+}
+
+.sidebar-brand-desc {
+    font-size: 0.8rem !important;
+    color: var(--text-muted) !important;
+    line-height: 1.5 !important;
+    font-weight: 400 !important;
+    background: rgba(255, 255, 255, 0.65) !important;
+    border: 1px solid rgba(203, 213, 225, 0.65) !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 0.85rem !important;
+    margin-bottom: 0.85rem !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03) !important;
+}
+
+.sidebar-footer-divider {
+    height: 1px !important;
+    background: rgba(203, 213, 225, 0.8) !important;
+    margin-bottom: 1.25rem !important;
+}
+
+.sidebar-footer-section {
+    margin-bottom: 1.2rem !important;
+}
+
+.sidebar-footer-heading {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    color: var(--copper-primary) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 0.6rem !important;
+}
+
+.sidebar-tech-tags {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+}
+
+.tech-tag {
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    color: var(--text-main) !important;
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(203, 213, 225, 0.8) !important;
+    border-radius: 10px !important;
+    padding: 3px 8px !important;
+    box-shadow: 0 1px 4px var(--shadow-color) !important;
+}
+
+.sidebar-social-links {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+}
+
+.sidebar-social-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: var(--text-muted) !important;
+    text-decoration: none !important;
+    font-size: 0.82rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+.sidebar-social-link:hover {
+    color: var(--copper-primary) !important;
+    transform: translateX(3px) !important;
+}
+
+.sidebar-copyright {
+    font-size: 0.74rem !important;
+    color: var(--text-muted) !important;
+    margin-top: 1.2rem !important;
+    padding-top: 0.75rem !important;
+    border-top: 1px dashed rgba(203, 213, 225, 0.8) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.sidebar-ver {
+    font-size: 0.7rem !important;
+    font-weight: 600 !important;
+    color: var(--copper-primary) !important;
+    background: rgba(212, 122, 68, 0.1) !important;
+    padding: 2px 6px !important;
+    border-radius: 8px !important;
+}
+
+/* Native Fixed Streamlit Chat Input Styling */
+[data-testid="stBottom"],
+[data-testid="stBottom"] > div,
+[data-testid="stBottom"] section,
+.stBottomBlockContainer,
+footer[data-testid="stFooter"] {
+    background-color: transparent !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+[data-testid="stBottom"] {
+    padding-bottom: 1rem !important;
+}
+
+[data-testid="stChatInput"] {
+    background: rgba(255, 255, 255, 0.98) !important;
+    border: 1.5px solid rgba(203, 213, 225, 0.85) !important;
+    border-radius: 28px !important;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08) !important;
+    backdrop-filter: blur(20px) !important;
+    transition: all 0.25s ease !important;
+}
+
+[data-testid="stChatInput"]:focus-within {
+    border-color: var(--copper-primary) !important;
+    box-shadow: 0 8px 32px rgba(212, 122, 68, 0.25) !important;
+}
+
+[data-testid="stChatInput"] button {
+    background: linear-gradient(135deg, #D47A44 0%, #B65927 100%) !important;
+    color: #FFFFFF !important;
+    border-radius: 50% !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(212, 122, 68, 0.35) !important;
+    transition: all 0.2s ease !important;
+}
+
+[data-testid="stChatInput"] button:hover {
+    background: linear-gradient(135deg, #E88950 0%, #C4622D 100%) !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 6px 18px rgba(212, 122, 68, 0.5) !important;
+}

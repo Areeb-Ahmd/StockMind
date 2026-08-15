@@ -20,20 +20,31 @@ except Exception:
 model_loader = ModelLoader()
 config = load_config()
 
+_retriever_instance = None
+
+def get_retriever():
+    global _retriever_instance
+    if _retriever_instance is None:
+        pinecone_api_key = os.getenv("PINECONE_API_KEY")
+        pc = Pinecone(api_key=pinecone_api_key)
+        vector_store = PineconeVectorStore(
+            index=pc.Index(config["vector_db"]["index_name"]), 
+            embedding=model_loader.load_embeddings()
+        )
+        _retriever_instance = vector_store.as_retriever(
+            search_type="similarity_score_threshold",
+            search_kwargs={
+                "k": config["retriever"]["top_k"],
+                "score_threshold": config["retriever"]["score_threshold"]
+            },
+        )
+    return _retriever_instance
+
 @tool(args_schema=RagToolSchema)
 def retriever_tool(question):
-    """this is retriever tool"""
-    pinecone_api_key = os.getenv("PINECONE_API_KEY")
-    pc = Pinecone(api_key=pinecone_api_key)
-    vector_store = PineconeVectorStore(index=pc.Index(config["vector_db"]["index_name"]), 
-                            embedding= model_loader.load_embeddings())
-    retriever = vector_store.as_retriever(
-        search_type="similarity_score_threshold",
-        search_kwargs={"k": config["retriever"]["top_k"] , "score_threshold": config["retriever"]["score_threshold"]},
-    )
-    retriever_result=retriever.invoke(question)
-    
-    return retriever_result
+    """Search and retrieve relevant context from uploaded stock market financial documents, annual reports, market guides, and custom PDFs/DOCXs stored in the Pinecone vector database."""
+    retriever = get_retriever()
+    return retriever.invoke(question)
 
 tavilytool = TavilySearchResults(
     max_results=config["tools"]["tavily"]["max_results"],

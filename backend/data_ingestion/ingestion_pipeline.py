@@ -59,14 +59,18 @@ class DataIngestion:
                     temp_file.write(uploaded_file.file.read())
                     temp_path = temp_file.name
 
-                if file_ext == ".pdf":
-                    loader = PyPDFLoader(temp_path)
-                    documents.extend(loader.load())
-                elif file_ext == ".docx":
-                    loader = Docx2txtLoader(temp_path)
-                    documents.extend(loader.load())
-                else:
-                    print(f"Unsupported file type: {uploaded_file.filename}")
+                try:
+                    if file_ext == ".pdf":
+                        loader = PyPDFLoader(temp_path)
+                        documents.extend(loader.load())
+                    elif file_ext == ".docx":
+                        loader = Docx2txtLoader(temp_path)
+                        documents.extend(loader.load())
+                    else:
+                        print(f"Unsupported file type: {uploaded_file.filename}")
+                finally:
+                    if os.path.exists(temp_path):
+                        os.unlink(temp_path)
             return documents
         except Exception as e:
             raise StockMindException(e, sys)

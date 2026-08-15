@@ -15,11 +15,11 @@ This master document outlines the multi-phase refactoring and optimization plan 
   - [x] Safe module wrapper initialization in `backend/toolkit/tools.py`
   - [x] Phase 1 Handover document created for Phase 2 agent transition
 
-- [ ] **Phase 2: RAG Retriever Tool Optimization & Ingestion Leak Fix**
-  - [ ] Detailed, informative docstring for `retriever_tool` in `backend/toolkit/tools.py`
-  - [ ] `os.unlink()` temp file cleanup in `backend/data_ingestion/ingestion_pipeline.py`
-  - [ ] Lazy vectorstore retriever caching in `backend/toolkit/tools.py`
-  - [ ] Phase 2 Handover document created for Phase 3 agent transition
+- [x] **Phase 2: RAG Retriever Tool Optimization & Ingestion Leak Fix**
+  - [x] Detailed, informative docstring for `retriever_tool` in `backend/toolkit/tools.py`
+  - [x] `os.unlink()` temp file cleanup in `backend/data_ingestion/ingestion_pipeline.py`
+  - [x] Lazy vectorstore retriever caching in `backend/toolkit/tools.py`
+  - [x] Phase 2 Handover document created for Phase 3 agent transition
 
 - [ ] **Phase 3: Agent Lifespan Management, Singleton Graph Caching & Cloud Logging**
   - [ ] `@asynccontextmanager` lifespan graph caching in `backend/main.py`

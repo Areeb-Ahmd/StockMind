@@ -2,12 +2,16 @@ import os
 import sys
 
 class StockMindException(Exception):
-    def __init__(self,error_message,error_details:sys):
+    def __init__(self, error_message, error_details: sys):
         self.error_message = error_message
-        _,_,exc_tb = error_details.exc_info()
+        _, _, exc_tb = error_details.exc_info() if error_details else (None, None, None)
         
-        self.lineno=exc_tb.tb_lineno
-        self.file_name=exc_tb.tb_frame.f_code.co_filename 
+        if exc_tb is not None:
+            self.lineno = exc_tb.tb_lineno
+            self.file_name = exc_tb.tb_frame.f_code.co_filename 
+        else:
+            self.lineno = "Unknown"
+            self.file_name = "Unknown" 
     
     def __str__(self):
         return "Error occured in python script name [{0}] line number [{1}] error message [{2}]".format(

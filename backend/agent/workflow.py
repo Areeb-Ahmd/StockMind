@@ -1,9 +1,10 @@
 from langgraph.graph import StateGraph, START
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt.tool_node import ToolNode, tools_condition
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from typing_extensions import Annotated, TypedDict
 from utils.model_loaders import ModelLoader
+from prompt_library.prompt import SYSTEM_PROMPT
 from toolkit.tools import *
 
 class State(TypedDict):
@@ -23,8 +24,9 @@ class GraphBuilder:
         self.graph = None
 
     
-    def _chatbot_node(self,state:State):
-        return {"messages": [self.llm_with_tools.invoke(state["messages"])]}
+    def _chatbot_node(self, state: State):
+        messages = [SystemMessage(content=SYSTEM_PROMPT)] + state["messages"]
+        return {"messages": [self.llm_with_tools.invoke(messages)]}
 
     def build(self):
         graph_builder = StateGraph(State)

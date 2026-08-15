@@ -10,7 +10,18 @@ from agent.workflow import GraphBuilder
 from data_models.models import *
 from utils.response_formatter import extract_text_content
 
-app = FastAPI(title="StockMind API", version="0.0.1")
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Compile and cache agent state graph once on server startup
+    graph_service = GraphBuilder()
+    graph_service.build()
+    app.state.graph = graph_service.get_graph()
+    yield
+    app.state.graph = None
+
+app = FastAPI(title="StockMind API", version="0.0.1", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,12 +49,14 @@ async def uploaded_files(files: List[UploadFile] = File(...)):
         return JSONResponse(status_code=500, content={"error": str(e)})
 
 @app.post("/query")
-async def query_chatbot(request: QuestionRequest):
+async def query_chatbot(request: QuestionRequest, req: Request):
     try:
-        graph_service = GraphBuilder()
-        graph_service.build()
-        graph = graph_service.get_graph()
-        
+        graph = getattr(req.app.state, "graph", None)
+        if graph is None:
+            graph_service = GraphBuilder()
+            graph_service.build()
+            graph = graph_service.get_graph()
+
         result = graph.invoke({"messages": [HumanMessage(content=request.question)]})
         
         # If result is dict with messages:

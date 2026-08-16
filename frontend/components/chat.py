@@ -8,31 +8,32 @@ def render_chat_interface(chatbot_logo_path: str, base_url: str, prompt_from_chi
 
     prompt_from_starter = None
 
-    # 1. Render Permanent Research Canvas & 4 Interactive Capability Starter Cards
-    empty_state_html = f"""<div class="chat-empty-canvas">
+    # 1. Render Permanent Research Canvas & 4 Interactive Capability Starter Cards in ONE Outer Card
+    canvas_container = st.container()
+    with canvas_container:
+        empty_state_html = """<div class="chat-canvas-anchor"></div>
 <div class="empty-canvas-header">
 <div class="empty-canvas-title">What would you like to research today?</div>
 <div class="empty-canvas-desc">Ask about a company, stock, market trend, financial report, or anything in your research library.</div>
-</div>
 </div>""".strip()
 
-    if hasattr(st, "html"):
-        st.html(empty_state_html)
-    else:
-        st.markdown(empty_state_html, unsafe_allow_html=True)
+        if hasattr(st, "html"):
+            st.html(empty_state_html)
+        else:
+            st.markdown(empty_state_html, unsafe_allow_html=True)
 
-    # 4 Interactive Capability Starter Cards (Always visible)
-    starter_col1, starter_col2 = st.columns(2)
-    with starter_col1:
-        if st.button(":material/trending_up: What's the current market sentiment, and what is driving the NIFTY 50 right now?", use_container_width=True, key="starter_btn_1"):
-            prompt_from_starter = "What's the current market sentiment, and what is driving the NIFTY 50 right now?"
-        if st.button(":material/description: Summarize the key risk factors and earnings highlights from my uploaded files.", use_container_width=True, key="starter_btn_2"):
-            prompt_from_starter = "Summarize the key risk factors and earnings highlights from my uploaded files."
-    with starter_col2:
-        if st.button(":material/bar_chart: Analyze Apple's latest financial statements and evaluate its overall financial health.", use_container_width=True, key="starter_btn_3"):
-            prompt_from_starter = "Analyze Apple's latest financial statements and evaluate its overall financial health."
-        if st.button(":material/language: Can you search for real-time market trends and top-performing sectors?", use_container_width=True, key="starter_btn_4"):
-            prompt_from_starter = "Can you search for real-time market trends and top-performing sectors?"
+        # 4 Interactive Capability Starter Sub-Cards
+        starter_col1, starter_col2 = st.columns(2)
+        with starter_col1:
+            if st.button(":material/trending_up: What's the current market sentiment, and what is driving the NIFTY 50 right now?", use_container_width=True, key="starter_btn_1"):
+                prompt_from_starter = "What's the current market sentiment, and what is driving the NIFTY 50 right now?"
+            if st.button(":material/description: Summarize the key risk factors and earnings highlights from my uploaded files.", use_container_width=True, key="starter_btn_2"):
+                prompt_from_starter = "Summarize the key risk factors and earnings highlights from my uploaded files."
+        with starter_col2:
+            if st.button(":material/bar_chart: Analyze Apple's latest financial statements and evaluate its overall financial health.", use_container_width=True, key="starter_btn_3"):
+                prompt_from_starter = "Analyze Apple's latest financial statements and evaluate its overall financial health."
+            if st.button(":material/language: Can you search for real-time market trends and top-performing sectors?", use_container_width=True, key="starter_btn_4"):
+                prompt_from_starter = "Can you search for real-time market trends and top-performing sectors?"
 
     # 2. Render Active Conversation Stream underneath starter cards
     if st.session_state.messages:

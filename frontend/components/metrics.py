@@ -1,34 +1,55 @@
+import os
 import streamlit as st
+from utils.assets import get_base64_image
 
 def render_metrics_and_chips() -> str:
-    """Render modern financial analysis hub and quick action prompt chips."""
-    
-    # Financial Intelligence Hero Banner
-    st.markdown("""
-        <div class="hero-section">
-            <div class="hero-title">Financial Intelligence & Research Hub</div>
-            <div class="hero-subtitle">Analyze market trends, company earnings, sector momentum, or ingested financial documents.</div>
-        </div>
-    """, unsafe_allow_html=True)
+    """Render authentic financial intelligence intro dashboard card based on StockMind architecture."""
+    assets_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "assets")
+    polygon_logo_path = os.path.join(assets_dir, "Polygon.io.jpeg")
+    polygon_b64 = get_base64_image(polygon_logo_path)
+    polygon_icon_html = f'<img src="{polygon_b64}" class="pillar-img-icon" alt="Polygon.io Logo" />' if polygon_b64 else '📊'
 
-    # Clean Quick Action Prompt Chips
-    st.markdown('<div class="chip-section-title">Recommended Analyses</div>', unsafe_allow_html=True)
-    
-    chip_col1, chip_col2, chip_col3, chip_col4 = st.columns(4)
+    pinecone_logo_path = os.path.join(assets_dir, "pinecone.svg")
+    pinecone_b64 = get_base64_image(pinecone_logo_path)
+    pinecone_icon_html = f'<img src="{pinecone_b64}" class="pillar-img-icon" alt="Pinecone Logo" />' if pinecone_b64 else '📁'
 
-    prompt_selected = None
+    tavily_logo_path = os.path.join(assets_dir, "tavily.svg")
+    tavily_b64 = get_base64_image(tavily_logo_path)
+    tavily_icon_html = f'<img src="{tavily_b64}" class="pillar-img-icon" alt="Tavily Logo" />' if tavily_b64 else '🌐'
 
-    with chip_col1:
-        if st.button("NIFTY 50 Benchmark", use_container_width=True):
-            prompt_selected = "Provide a comprehensive market analysis and outlook for NIFTY 50."
-    with chip_col2:
-        if st.button("Sector Momentum & Leaders", use_container_width=True):
-            prompt_selected = "What are the top performing stock sectors right now and key growth drivers?"
-    with chip_col3:
-        if st.button("Earnings & Report Summary", use_container_width=True):
-            prompt_selected = "Summarize key findings, risks, and financial metrics from the ingested document reports."
-    with chip_col4:
-        if st.button("Portfolio Risk Strategy", use_container_width=True):
-            prompt_selected = "Explain key risk management strategies for stock portfolio allocation."
+    hero_html = f"""<div class="hero-intro-card">
+<div class="hero-intro-header">
+<h2 class="hero-title">Your AI Financial Research Assistant</h2>
+<p class="hero-subtitle">Ask questions about stocks, companies, markets, financial reports, or your uploaded research.</p>
+</div>
+<div class="hero-pillars-grid">
+<div class="hero-pillar-card">
+<div class="pillar-icon">{polygon_icon_html}</div>
+<div class="pillar-content">
+<div class="pillar-title">Company Financials</div>
+<div class="pillar-desc">Review revenue, earnings, balance sheets, cash flow, and other key metrics to understand a company's financial performance. Powered by Polygon.io.</div>
+</div>
+</div>
+<div class="hero-pillar-card">
+<div class="pillar-icon">{pinecone_icon_html}</div>
+<div class="pillar-content">
+<div class="pillar-title">Document Analysis</div>
+<div class="pillar-desc">Analyze your uploaded reports, filings, and research documents to find financial metrics, key insights, risks, and important details. Powered by Pinecone.</div>
+</div>
+</div>
+<div class="hero-pillar-card">
+<div class="pillar-icon">{tavily_icon_html}</div>
+<div class="pillar-content">
+<div class="pillar-title">Live Web Search</div>
+<div class="pillar-desc">Stay up to date with the latest market news, company updates, sector trends, and economic developments. Powered by Tavily.</div>
+</div>
+</div>
+</div>
+</div>""".strip()
 
-    return prompt_selected
+    if hasattr(st, "html"):
+        st.html(hero_html)
+    else:
+        st.markdown(hero_html, unsafe_allow_html=True)
+
+    return None

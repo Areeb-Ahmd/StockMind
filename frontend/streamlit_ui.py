@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from utils.assets import load_theme_css
 from components.sidebar import render_sidebar
+from components.header import render_header
 from components.metrics import render_metrics_and_chips
 from components.chat import render_chat_interface
 
@@ -14,8 +15,6 @@ from components.chat import render_chat_interface
 BASE_URL = os.environ.get("BACKEND_URL", "http://localhost:8080").rstrip("/")
 ASSETS_DIR = os.path.join(os.path.dirname(__file__), "assets")
 
-MAIN_LOGO_PATH = os.path.join(ASSETS_DIR, "main_logo.png")
-EXTRA_LOGO_PATH = os.path.join(ASSETS_DIR, "extra_logo.png")
 CHATBOT_LOGO_PATH = os.path.join(ASSETS_DIR, "chatbot_logo.png")
 
 # 2. Streamlit Page Config
@@ -36,6 +35,7 @@ if "ingested_count" not in st.session_state:
 load_theme_css()
 
 # 5. Render Modular Layout Components
-render_sidebar(MAIN_LOGO_PATH, BASE_URL)
+render_sidebar(BASE_URL)
+render_header(CHATBOT_LOGO_PATH)
 prompt_from_chip = render_metrics_and_chips()
-render_chat_interface(CHATBOT_LOGO_PATH, EXTRA_LOGO_PATH, BASE_URL, prompt_from_chip)
+render_chat_interface(CHATBOT_LOGO_PATH, BASE_URL, prompt_from_chip)

@@ -407,12 +407,25 @@ div[data-testid="stChatMessageAssistant"] {
     border-radius: 50% !important;
 }
 
+.stChatMessage,
+[data-testid="stChatMessage"],
+div[data-testid="stChatMessageUser"],
+div[data-testid="stChatMessageAssistant"] {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+}
+
 [data-testid="stChatMessageContent"] {
     flex: 1 1 auto !important;
     width: auto !important;
     max-width: 100% !important;
-    overflow-x: auto !important;
+    overflow: visible !important;
+    overflow-x: visible !important;
+    height: auto !important;
+    min-height: auto !important;
     word-break: break-word !important;
+    overflow-wrap: break-word !important;
 }
 
 /* Proportional Fluid Chat Typography System */

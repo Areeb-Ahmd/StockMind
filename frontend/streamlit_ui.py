@@ -1,74 +1,41 @@
 import os
 import sys
 import streamlit as st
-import requests
 
-# Backend endpoint (dynamically loaded from environment variable, fallback to localhost:8080)
+# Add current directory to path for clean modular component imports
+sys.path.insert(0, os.path.dirname(__file__))
+
+from utils.assets import load_theme_css
+from components.sidebar import render_sidebar
+from components.header import render_header
+from components.metrics import render_metrics_and_chips
+from components.chat import render_chat_interface
+
+# 1. Environment & Asset Paths
 BASE_URL = os.environ.get("BACKEND_URL", "http://localhost:8080").rstrip("/")
+ASSETS_DIR = os.path.join(os.path.dirname(__file__), "assets")
 
+CHATBOT_LOGO_PATH = os.path.join(ASSETS_DIR, "chatbot_logo.png")
+
+# 2. Streamlit Page Config
 st.set_page_config(
     page_title="StockMind – Agentic Stock Market Assistant",
-    page_icon="📈",
-    layout="centered",
+    page_icon=CHATBOT_LOGO_PATH if os.path.exists(CHATBOT_LOGO_PATH) else "📈",
+    layout="wide",
     initial_sidebar_state="expanded",
 )
 
-st.title("📈 StockMind – Agentic Stock Market Assistant")
-
-# Initialize chat history
+# 3. Session State Initialization
 if "messages" not in st.session_state:
     st.session_state.messages = []
+if "ingested_count" not in st.session_state:
+    st.session_state.ingested_count = 0
 
-# Sidebar: Upload documents
-with st.sidebar:
-    st.header("📄 Upload Documents")
-    st.markdown("Upload **stock market PDFs or DOCX** to create knowledge base.")
-    uploaded_files = st.file_uploader("Choose files", type=["pdf", "docx"], accept_multiple_files=True)
+# 4. Load Light Theme Stylesheet from frontend/static/css/theme.css
+load_theme_css()
 
-    if st.button("Upload and Ingest"):
-        if uploaded_files:
-            files = []
-            for f in uploaded_files:
-                file_data = f.read()
-                if not file_data:
-                    continue
-                files.append(("files", (getattr(f, "name", "file.pdf"), file_data, f.type)))
-
-            if files:
-                try:
-                    with st.spinner("Uploading and processing files..."):
-                        response = requests.post(f"{BASE_URL}/upload", files=files)
-                        if response.status_code == 200:
-                            st.success("✅ Files uploaded and processed successfully!")
-                        else:
-                            st.error("❌ Upload failed: " + response.text)
-                except Exception as e:
-                    st.error(f"❌ Error connecting to backend: {e}")
-            else:
-                st.warning("Some files were empty or unreadable.")
-
-# Display chat history using native Streamlit chat bubbles
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
-# Bottom chat input
-if prompt := st.chat_input("Ask StockMind a question (e.g. Tell me about NIFTY 50)..."):
-    # Append and render user message
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
-
-    # Render assistant response with spinner
-    with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
-            try:
-                response = requests.post(f"{BASE_URL}/query", json={"question": prompt})
-                if response.status_code == 200:
-                    answer = response.json().get("answer", "No answer returned.")
-                    st.markdown(answer)
-                    st.session_state.messages.append({"role": "assistant", "content": answer})
-                else:
-                    st.error("❌ Bot failed to respond: " + response.text)
-            except Exception as e:
-                st.error(f"❌ Error connecting to backend: {e}")
+# 5. Render Modular Layout Components
+render_sidebar(BASE_URL)
+render_header(CHATBOT_LOGO_PATH)
+prompt_from_chip = render_metrics_and_chips()
+render_chat_interface(CHATBOT_LOGO_PATH, BASE_URL, prompt_from_chip)

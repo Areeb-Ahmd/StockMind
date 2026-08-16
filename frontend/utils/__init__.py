@@ -1,0 +1,3 @@
+"""
+StockMind Frontend Utilities Package
+"""

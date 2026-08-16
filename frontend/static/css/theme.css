@@ -1,0 +1,753 @@
+/* StockMind Light Theme Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg-main: radial-gradient(circle at 85% 12%, rgba(30, 58, 138, 0.12) 0%, rgba(30, 58, 138, 0.03) 40%, transparent 70%),
+        radial-gradient(circle at 50% 0%, rgba(15, 23, 42, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 15% 85%, rgba(30, 58, 138, 0.05) 0%, transparent 50%),
+        linear-gradient(135deg, #FFFFFF 0%, #FAFAFB 50%, #F1F5F9 100%);
+    --card-bg: rgba(255, 255, 255, 0.98);
+    --card-border: rgba(203, 213, 225, 0.85);
+    --card-hover-border: rgba(30, 58, 138, 0.6);
+    --header-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 244, 248, 0.95) 100%);
+    --sidebar-bg: radial-gradient(circle at 50% 0%, rgba(30, 58, 138, 0.06) 0%, transparent 60%),
+        linear-gradient(180deg, #F0F4F8 0%, #E2E8F0 50%, #D5E0EA 100%);
+    --copper-primary: #D47A44;
+    --copper-hover: #B65927;
+    --amber-gold: #D97706;
+    --navy-accent: #1E3A8A;
+    --text-main: #0F172A;
+    --text-muted: #475569;
+    --user-msg-bg: linear-gradient(135deg, rgba(240, 244, 248, 0.95) 0%, rgba(226, 232, 240, 0.9) 100%);
+    --input-bg: rgba(255, 255, 255, 0.98);
+    --shadow-color: rgba(30, 58, 138, 0.06);
+}
+
+/* Global Viewport Layout */
+html,
+body,
+.stApp,
+[data-testid="stAppViewContainer"] {
+    background: var(--bg-main) !important;
+    color: var(--text-main) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+[data-testid="stMain"] {
+    background: transparent !important;
+}
+
+.main .block-container {
+    padding-top: 0.5rem !important;
+    padding-bottom: 3rem !important;
+    max-width: 1200px !important;
+}
+
+h1, h2, h3, h4, h5, h6, .brand-title {
+    font-family: 'Outfit', sans-serif !important;
+    letter-spacing: -0.02em;
+    color: var(--text-main) !important;
+}
+
+/* Hide default Streamlit header bar */
+header[data-testid="stHeader"] {
+    background: transparent !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+}
+
+/* Main Page Center-Aligned Hero Title Header */
+.main-page-heading {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: clamp(0.6rem, 2vw, 1.4rem) !important;
+    padding: 0 0 1.25rem 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 auto 0.5rem auto !important;
+    text-align: center !important;
+}
+
+.main-heading-icon {
+    height: clamp(48px, 9vw, 82px) !important;
+    width: clamp(48px, 9vw, 82px) !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 6px 20px rgba(212, 122, 68, 0.4)) !important;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.main-heading-icon:hover {
+    transform: scale(1.06) rotate(3deg) !important;
+}
+
+.main-heading-brand {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+}
+
+.main-brand-title {
+    line-height: 1.0 !important;
+    text-align: center !important;
+    width: 100% !important;
+}
+
+.brand-text-navy {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: clamp(2.1rem, 5.5vw, 3.5rem) !important;
+    font-weight: 700 !important;
+    color: #0F172A !important;
+    letter-spacing: -0.03em !important;
+}
+
+.brand-text-copper {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: clamp(2.1rem, 5.5vw, 3.5rem) !important;
+    font-weight: 700 !important;
+    color: #D47A44 !important;
+    letter-spacing: -0.03em !important;
+}
+
+.main-brand-tagline {
+    font-family: 'Inter', sans-serif !important;
+    font-size: clamp(0.7rem, 1.8vw, 0.85rem) !important;
+    font-weight: 700 !important;
+    color: #475569 !important;
+    letter-spacing: 0.22em !important;
+    text-transform: uppercase !important;
+    margin-top: 4px !important;
+}
+
+/* Status dot pulse animation */
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #10B981;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #10B981;
+    animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+/* Intro Section Financial Intelligence Card */
+.hero-intro-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 244, 248, 0.92) 100%) !important;
+    border: 1px solid rgba(203, 213, 225, 0.85) !important;
+    border-radius: 18px !important;
+    padding: 1.4rem 1.6rem !important;
+    margin-bottom: 1.6rem !important;
+    box-shadow: 0 4px 20px rgba(30, 58, 138, 0.05) !important;
+    backdrop-filter: blur(16px) !important;
+}
+
+.hero-intro-header {
+    margin-bottom: 1.2rem !important;
+}
+
+.hero-title {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: clamp(1.15rem, 3vw, 1.45rem) !important;
+    font-weight: 700 !important;
+    color: #0F172A !important;
+    letter-spacing: -0.015em !important;
+    margin-bottom: 0.35rem !important;
+}
+
+.hero-subtitle {
+    font-size: clamp(0.8rem, 2vw, 0.86rem) !important;
+    color: #475569 !important;
+    line-height: 1.5 !important;
+    font-weight: 400 !important;
+}
+
+.hero-pillars-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1rem !important;
+}
+
+.hero-pillar-card {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 0.85rem !important;
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(203, 213, 225, 0.75) !important;
+    border-radius: 14px !important;
+    padding: 0.85rem 1rem !important;
+    transition: all 0.25s ease !important;
+}
+
+.hero-pillar-card:hover {
+    background: #FFFFFF !important;
+    border-color: rgba(212, 122, 68, 0.6) !important;
+    box-shadow: 0 4px 14px rgba(212, 122, 68, 0.12) !important;
+    transform: translateY(-1.5px) !important;
+}
+
+.pillar-icon {
+    font-size: 1.35rem !important;
+    line-height: 1 !important;
+    margin-top: 2px !important;
+}
+
+.pillar-img-icon {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+    object-fit: contain !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+.pillar-title {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    color: #0F172A !important;
+    margin-bottom: 2px !important;
+}
+
+.pillar-desc {
+    font-size: 0.76rem !important;
+    color: #64748B !important;
+    line-height: 1.35 !important;
+}
+
+/* Prompt Chips & Starter Buttons */
+div.stButton>button {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--card-border) !important;
+    color: var(--text-main) !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 1rem !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 8px var(--shadow-color) !important;
+    white-space: normal !important;
+    height: auto !important;
+    word-break: break-word !important;
+}
+
+div.stButton>button:hover {
+    background: linear-gradient(135deg, #D47A44 0%, #B65927 100%) !important;
+    border-color: #E89459 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 6px 20px rgba(212, 122, 68, 0.35) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Seamless AI Chat Interface Styling */
+.stChatMessage {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 0.85rem 1rem !important;
+    margin-bottom: 0.75rem !important;
+    color: var(--text-main) !important;
+    box-shadow: none !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
+}
+
+/* Modern Chat Empty State Canvas Styling */
+.chat-empty-canvas {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 244, 248, 0.92) 100%) !important;
+    border: 1px solid rgba(203, 213, 225, 0.85) !important;
+    border-radius: 20px !important;
+    padding: 1.4rem 1.6rem !important;
+    margin: 1rem 0 1.25rem 0 !important;
+    text-align: center !important;
+    box-shadow: 0 6px 24px rgba(30, 58, 138, 0.05) !important;
+    backdrop-filter: blur(16px) !important;
+}
+
+.empty-canvas-title {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: clamp(1.1rem, 2.5vw, 1.35rem) !important;
+    font-weight: 700 !important;
+    color: #0F172A !important;
+    letter-spacing: -0.015em !important;
+    margin-bottom: 0.35rem !important;
+}
+
+.empty-canvas-desc {
+    font-size: clamp(0.8rem, 2vw, 0.86rem) !important;
+    color: #475569 !important;
+    line-height: 1.5 !important;
+    max-width: 620px !important;
+    margin: 0 auto !important;
+}
+
+div[data-testid="stChatMessageUser"] {
+    background: linear-gradient(135deg, rgba(241, 245, 249, 0.95) 0%, rgba(226, 232, 240, 0.9) 100%) !important;
+    border: 1px solid rgba(203, 213, 225, 0.6) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04) !important;
+}
+
+div[data-testid="stChatMessageAssistant"] {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid var(--card-border) !important;
+    border-left: 3px solid var(--copper-primary) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 4px 16px var(--shadow-color) !important;
+}
+
+/* Chat Message Avatar & Content Layout Fix */
+[data-testid="stChatMessageAvatar"] {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    max-width: 38px !important;
+    max-height: 38px !important;
+    background: transparent !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+[data-testid="stChatMessageAvatar"] img {
+    width: 38px !important;
+    height: 38px !important;
+    max-width: 38px !important;
+    max-height: 38px !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 2px 6px rgba(212, 122, 68, 0.25)) !important;
+    border-radius: 50% !important;
+}
+
+[data-testid="stChatMessageContent"] {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    word-break: break-word !important;
+}
+
+[data-testid="stChatMessageContent"] table {
+    display: block !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+}
+
+[data-testid="stChatMessageContent"] img {
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+}
+
+/* Streamlit Sidebar Styling */
+section[data-testid="stSidebar"] {
+    background: radial-gradient(circle at 50% 0%, rgba(30, 58, 138, 0.05) 0%, transparent 60%),
+        linear-gradient(180deg, #F0F4F8 0%, #E2E8F0 50%, #D5E0EA 100%) !important;
+    border-right: 1px solid rgba(203, 213, 225, 0.9) !important;
+    box-shadow: inset -4px 0 16px rgba(30, 58, 138, 0.02) !important;
+}
+
+section[data-testid="stSidebar"] * {
+    color: var(--text-main) !important;
+}
+
+/* Sidebar Header */
+.sidebar-main-heading-wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    margin-top: 1.15rem !important;
+    margin-bottom: 0.85rem !important;
+}
+
+.sidebar-main-heading {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 1.55rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.025em !important;
+    text-align: center !important;
+}
+
+.sidebar-heading-navy {
+    color: #0F172A !important;
+}
+
+.sidebar-heading-copper {
+    color: #D47A44 !important;
+}
+
+.sidebar-heading-accent-bar {
+    width: 90px !important;
+    height: 2.5px !important;
+    background: linear-gradient(90deg, rgba(212, 122, 68, 0) 0%, rgba(212, 122, 68, 0.95) 50%, rgba(212, 122, 68, 0) 100%) !important;
+    border-radius: 4px !important;
+    margin-top: 0.5rem !important;
+    box-shadow: 0 2px 10px rgba(212, 122, 68, 0.25) !important;
+}
+
+/* Sidebar KB Card */
+.sidebar-kb-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(203, 213, 225, 0.85) !important;
+    border-left: 3px solid var(--copper-primary) !important;
+    border-radius: 16px !important;
+    padding: 1rem 1.15rem !important;
+    margin-bottom: 1.2rem !important;
+    box-shadow: 0 4px 16px rgba(30, 58, 138, 0.04) !important;
+}
+
+.sidebar-kb-desc {
+    font-size: 0.82rem !important;
+    color: #475569 !important;
+    line-height: 1.48 !important;
+    margin-bottom: 0.85rem !important;
+}
+
+/* Custom Streamlit File Uploader Box Styling */
+section[data-testid="stSidebar"] section[data-testid="stFileUploader"] {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1.5px dashed var(--card-border) !important;
+    border-radius: 14px !important;
+    padding: 0.85rem !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 4px 14px var(--shadow-color) !important;
+}
+
+section[data-testid="stSidebar"] section[data-testid="stFileUploader"]:hover {
+    border-color: var(--copper-primary) !important;
+    background: #FFFFFF !important;
+    box-shadow: 0 6px 20px rgba(212, 122, 68, 0.2) !important;
+}
+
+div[data-testid="stFileUploaderDropzone"] {
+    background: transparent !important;
+    border: none !important;
+    padding: 0.5rem 0 !important;
+}
+
+div[data-testid="stFileUploaderDropzoneInstructions"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+    margin-bottom: 0.5rem !important;
+}
+
+div[data-testid="stFileUploaderDropzoneInstructions"] * {
+    display: none !important;
+}
+
+div[data-testid="stFileUploaderDropzoneInstructions"]::before {
+    content: "Drop PDFs or DOCX files here, or browse your computer." !important;
+    font-size: 0.82rem !important;
+    font-weight: 500 !important;
+    color: #0F172A !important;
+    line-height: 1.35 !important;
+    display: block !important;
+    margin-bottom: 3px !important;
+}
+
+div[data-testid="stFileUploaderDropzoneInstructions"]::after {
+    content: "Maximum 200MB per file." !important;
+    font-size: 0.76rem !important;
+    color: #64748B !important;
+    line-height: 1.3 !important;
+    display: block !important;
+}
+
+div[data-testid="stFileUploaderDropzone"] button {
+    background: linear-gradient(135deg, rgba(241, 245, 249, 0.95) 0%, rgba(226, 232, 240, 0.9) 100%) !important;
+    border: 1px solid var(--card-border) !important;
+    color: var(--text-main) !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+    padding: 0.45rem 0.95rem !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 6px var(--shadow-color) !important;
+}
+
+div[data-testid="stFileUploaderDropzone"] button:hover {
+    background: linear-gradient(135deg, #D47A44 0%, #B65927 100%) !important;
+    color: #FFFFFF !important;
+    border-color: #E88950 !important;
+    box-shadow: 0 4px 14px rgba(212, 122, 68, 0.35) !important;
+}
+
+/* Sidebar Primary Action Button Styling */
+section[data-testid="stSidebar"] div.stButton>button {
+    background: linear-gradient(135deg, #D47A44 0%, #B65927 100%) !important;
+    border: none !important;
+    color: #FFFFFF !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1.05rem !important;
+    letter-spacing: 0.015em !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 1rem !important;
+    margin-top: 0.85rem !important;
+    box-shadow: 0 4px 16px rgba(212, 122, 68, 0.35) !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+section[data-testid="stSidebar"] div.stButton>button * {
+    color: #FFFFFF !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1.05rem !important;
+    letter-spacing: 0.015em !important;
+}
+
+section[data-testid="stSidebar"] div.stButton>button:hover {
+    background: linear-gradient(135deg, #E88950 0%, #C4622D 100%) !important;
+    box-shadow: 0 6px 22px rgba(212, 122, 68, 0.5) !important;
+    transform: translateY(-1.5px) !important;
+}
+
+section[data-testid="stSidebar"] div.stButton>button:hover * {
+    color: #FFFFFF !important;
+}
+
+/* Sidebar Footer Component Styling */
+.sidebar-footer-container {
+    margin-top: 1.5rem !important;
+    padding-top: 0.5rem !important;
+}
+
+.sidebar-brand-desc {
+    font-size: 0.8rem !important;
+    color: var(--text-muted) !important;
+    line-height: 1.5 !important;
+    font-weight: 400 !important;
+    background: rgba(255, 255, 255, 0.65) !important;
+    border: 1px solid rgba(203, 213, 225, 0.65) !important;
+    border-left: 3px solid var(--copper-primary) !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 0.85rem !important;
+    margin-bottom: 0.85rem !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03) !important;
+}
+
+.sidebar-footer-divider {
+    height: 1px !important;
+    background: rgba(203, 213, 225, 0.8) !important;
+    margin-bottom: 1.25rem !important;
+}
+
+.sidebar-footer-section {
+    margin-bottom: 1.2rem !important;
+}
+
+.sidebar-footer-heading {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    color: var(--copper-primary) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 0.6rem !important;
+}
+
+.sidebar-social-links {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    border-left: 3px solid var(--copper-primary) !important;
+    padding-left: 0.75rem !important;
+    margin-left: 2px !important;
+    border-radius: 2px !important;
+}
+
+.sidebar-social-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: var(--text-muted) !important;
+    text-decoration: none !important;
+    font-size: 0.82rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+.sidebar-social-link:hover {
+    color: var(--copper-primary) !important;
+    transform: translateX(3px) !important;
+}
+
+.sidebar-social-icon,
+.sidebar-social-svg {
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    min-height: 16px !important;
+    object-fit: contain !important;
+    flex-shrink: 0 !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    transition: transform 0.2s ease !important;
+}
+
+.sidebar-social-link:hover .sidebar-social-icon,
+.sidebar-social-link:hover .sidebar-social-svg {
+    transform: scale(1.15) !important;
+}
+
+.sidebar-copyright {
+    font-size: 0.74rem !important;
+    color: var(--text-muted) !important;
+    margin-top: 1.2rem !important;
+    padding-top: 0.75rem !important;
+    border-top: 1px dashed rgba(203, 213, 225, 0.8) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+/* Native Fixed Streamlit Chat Input Styling */
+[data-testid="stBottom"],
+[data-testid="stBottom"]>div,
+[data-testid="stBottom"] section,
+.stBottomBlockContainer,
+footer[data-testid="stFooter"] {
+    background-color: transparent !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+[data-testid="stBottom"] {
+    padding-bottom: 1rem !important;
+}
+
+[data-testid="stChatInput"] {
+    background: rgba(255, 255, 255, 0.98) !important;
+    border: 1.5px solid rgba(203, 213, 225, 0.85) !important;
+    border-radius: 28px !important;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08) !important;
+    backdrop-filter: blur(20px) !important;
+    transition: all 0.25s ease !important;
+}
+
+[data-testid="stChatInput"]:focus-within {
+    border-color: var(--copper-primary) !important;
+    box-shadow: 0 8px 32px rgba(212, 122, 68, 0.25) !important;
+}
+
+[data-testid="stChatInput"] button {
+    background: linear-gradient(135deg, #D47A44 0%, #B65927 100%) !important;
+    color: #FFFFFF !important;
+    border-radius: 50% !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(212, 122, 68, 0.35) !important;
+    transition: all 0.2s ease !important;
+}
+
+[data-testid="stChatInput"] button:hover {
+    background: linear-gradient(135deg, #E88950 0%, #C4622D 100%) !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 6px 18px rgba(212, 122, 68, 0.5) !important;
+}
+
+div[data-testid="stChatMessageAvatar"] {
+    background-color: transparent !important;
+    overflow: visible !important;
+    border-radius: 0 !important;
+}
+
+div[data-testid="stChatMessageAvatar"] img {
+    object-fit: contain !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints & Mobile Optimization Rules
+   ========================================================================== */
+
+/* Tablet & Mobile Landscape (< 768px) */
+@media (max-width: 768px) {
+    .main .block-container {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+        padding-top: 0.25rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    .hero-pillars-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem !important;
+    }
+
+    .hero-intro-card {
+        padding: 1.1rem 1.25rem !important;
+        border-radius: 14px !important;
+    }
+
+    .chat-empty-canvas {
+        padding: 1.2rem 1.25rem !important;
+        border-radius: 16px !important;
+    }
+
+    div.stButton>button {
+        padding: 0.65rem 0.85rem !important;
+        font-size: 0.84rem !important;
+    }
+}
+
+/* Mobile Devices & Narrow Screens (< 480px) */
+@media (max-width: 480px) {
+    .main-page-heading {
+        gap: 0.5rem !important;
+        padding-bottom: 0.85rem !important;
+    }
+
+    .main-brand-tagline {
+        letter-spacing: 0.12em !important;
+    }
+
+    .hero-pillar-card {
+        padding: 0.75rem 0.85rem !important;
+    }
+
+    [data-testid="stChatMessage"] {
+        padding: 0.7rem 0.85rem !important;
+    }
+
+    [data-testid="stChatMessageAvatar"] {
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 32px !important;
+        min-height: 32px !important;
+    }
+
+    [data-testid="stChatMessageAvatar"] img {
+        width: 32px !important;
+        height: 32px !important;
+    }
+}

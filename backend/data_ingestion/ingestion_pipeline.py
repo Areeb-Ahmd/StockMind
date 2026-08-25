@@ -75,7 +75,7 @@ class DataIngestion:
         except Exception as e:
             raise StockMindException(e, sys)
 
-    def store_in_vector_db(self, documents: List[Document]):
+    def store_in_vector_db(self, documents: List[Document], progress_callback=None):
         try:
             text_splitter = RecursiveCharacterTextSplitter(
                 chunk_size=1000,
@@ -116,8 +116,11 @@ class DataIngestion:
                 batch_num = (i // batch_size) + 1
                 total_batches = (total_docs + batch_size - 1) // batch_size
 
-                logger.info(f"Ingesting batch {batch_num}/{total_batches} ({len(batch_docs)} chunks)...")
-                print(f"Ingesting batch {batch_num}/{total_batches} ({len(batch_docs)} chunks)...")
+                msg = f"Ingesting batch {batch_num}/{total_batches} ({len(batch_docs)} chunks)..."
+                logger.info(msg)
+                print(msg)
+                if progress_callback:
+                    progress_callback(batch_num, total_batches, msg)
 
                 retry_count = 0
                 current_delay = retry_initial_delay
@@ -129,11 +132,14 @@ class DataIngestion:
                         err_msg = str(batch_err)
                         if ("RESOURCE_EXHAUSTED" in err_msg or "429" in err_msg) and retry_count < max_retries:
                             retry_count += 1
-                            logger.warning(
+                            retry_msg = (
                                 f"Rate limit hit on batch {batch_num}/{total_batches}. "
-                                f"Retrying ({retry_count}/{max_retries}) after {current_delay}s... Error: {err_msg}"
+                                f"Retrying ({retry_count}/{max_retries}) in {current_delay}s..."
                             )
-                            print(f"Rate limit hit. Retrying ({retry_count}/{max_retries}) in {current_delay}s...")
+                            logger.warning(retry_msg)
+                            print(retry_msg)
+                            if progress_callback:
+                                progress_callback(batch_num, total_batches, retry_msg)
                             time.sleep(current_delay)
                             current_delay *= 2
                         else:
@@ -149,13 +155,17 @@ class DataIngestion:
         except Exception as e:
             raise StockMindException(e, sys)
 
-    def run_pipeline(self, uploaded_files):
+    def run_pipeline(self, uploaded_files, progress_callback=None):
         try:
+            if progress_callback:
+                progress_callback(0, 0, "Loading and parsing documents...")
             documents = self.load_documents(uploaded_files)
             if not documents:
                 print("No valid documents found.")
+                if progress_callback:
+                    progress_callback(0, 0, "No valid documents found.")
                 return
-            self.store_in_vector_db(documents)
+            self.store_in_vector_db(documents, progress_callback=progress_callback)
         except Exception as e:
             raise StockMindException(e, sys)
 

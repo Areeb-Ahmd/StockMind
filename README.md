@@ -72,7 +72,7 @@ The system is organized as a monorepo featuring a **FastAPI** backend API and a 
 │   ├── data_ingestion/
 │   │   └── ingestion_pipeline.py # Document loader, splitter, and Pinecone ingestion pipeline
 │   ├── data_models/
-│   │   └── models.py           # Pydantic data schemas (QuestionRequest, RagToolSchema)
+│   │   └── models.py           # Pydantic data schemas (QuestionRequest, IngestionTaskResponse, RagToolSchema)
 │   ├── exception/
 │   │   └── exceptions.py       # Custom StockMindException error handler
 │   ├── fallback_data/          # Default research PDF and DOCX files
@@ -81,13 +81,18 @@ The system is organized as a monorepo featuring a **FastAPI** backend API and a 
 │   │   └── trading_basics.pdf
 │   ├── prompt_library/
 │   │   └── prompt.py           # System prompts for agent behavior
+│   ├── routers/                # Modular FastAPI APIRouters
+│   │   ├── chat_router.py      # APIRouter for /query RAG workflow
+│   │   └── ingestion_router.py # APIRouter for async /upload and /upload/status/{task_id}
+│   ├── services/               # Internal business logic & task management services
+│   │   └── task_service.py     # In-memory background task status manager & file buffer
 │   ├── toolkit/
 │   │   └── tools.py            # LangChain tool definitions (Retriever, Tavily, Polygon)
 │   ├── utils/
 │   │   ├── config_loader.py    # YAML configuration loader
 │   │   ├── model_loaders.py    # Primary & Fallback LLM and embedding model loaders
 │   │   └── response_formatter.py # Response parser for AIMessage text extraction
-│   ├── main.py                 # FastAPI backend entrypoint & REST API endpoints
+│   ├── main.py                 # Lean FastAPI entry point, CORS middleware & router mounting
 │   ├── requirements.txt        # Backend Python package dependencies
 │   └── setup.py                # Package setup script
 │
@@ -246,8 +251,9 @@ To run StockMind locally or deploy it to cloud infrastructure, you will need:
 
 1. **Document Ingestion Workflow:**
    - Users upload PDF or DOCX research files via the Streamlit sidebar.
-   - Streamlit forwards files to `POST /upload` on the FastAPI backend.
-   - `DataIngestion` processes files using `PyPDFLoader` or `Docx2txtLoader`, splits text using `RecursiveCharacterTextSplitter`, embeds chunks with Google Embeddings, and stores vectors in Pinecone index (`stockmind-vdb`).
+   - Streamlit forwards files asynchronously to `POST /upload` on the FastAPI backend, which returns an immediate HTTP 202 Accepted response with a unique `task_id`.
+   - `task_service` dispatches `DataIngestion` as a background task. The pipeline processes files using `PyPDFLoader` or `Docx2txtLoader`, splits text into chunks, embeds them with Google Embeddings, and streams batch updates into Pinecone vector index (`stockmind-vdb`).
+   - Streamlit UI polls `GET /upload/status/{task_id}` every 1.5 seconds, displaying dynamic live batch progress (`st.status()`) until ingestion completes.
 
 2. **Query & Agent Execution Workflow:**
    - User submits a question through the chat interface or capability prompt cards.

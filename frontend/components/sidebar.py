@@ -1,4 +1,5 @@
 import os
+import time
 import requests
 import streamlit as st
 from components.footer import render_sidebar_footer
@@ -43,13 +44,49 @@ Upload trading guides, SEC filings, financial reports, research notes and other 
 
                 if files:
                     try:
-                        with st.spinner("Uploading and processing documents..."):
-                            response = requests.post(f"{base_url}/upload", files=files, timeout=60)
-                            if response.status_code == 200:
-                                st.session_state.ingested_count += len(files)
-                                st.success(f"Successfully uploaded and processed {len(files)} document(s)!")
-                                st.rerun()
+                        with st.status("Initiating document upload...", expanded=True) as status_box:
+                            response = requests.post(f"{base_url}/upload", files=files, timeout=30)
+                            if response.status_code == 202:
+                                task_data = response.json()
+                                task_id = task_data.get("task_id")
+                                status_box.write("📁 Files uploaded to server. Processing ingestion...")
+
+                                # Poll task status until completed or failed
+                                while True:
+                                    time.sleep(1.5)
+                                    poll_res = requests.get(f"{base_url}/upload/status/{task_id}", timeout=10)
+                                    if poll_res.status_code == 200:
+                                        task_info = poll_res.json()
+                                        task_status = task_info.get("status")
+                                        msg = task_info.get("message", "Processing...")
+                                        curr_b = task_info.get("current_batch", 0)
+                                        tot_b = task_info.get("total_batches", 0)
+
+                                        if tot_b > 0:
+                                            status_box.update(label=f"Ingestion progress: Batch {curr_b}/{tot_b}", state="running")
+                                            status_box.write(msg)
+                                        else:
+                                            status_box.update(label=msg, state="running")
+
+                                        if task_status == "completed":
+                                            status_box.update(label=f"Successfully processed {len(files)} document(s)!", state="complete", expanded=False)
+                                            if "ingested_count" in st.session_state:
+                                                st.session_state.ingested_count += len(files)
+                                            st.success(f"Successfully uploaded and processed {len(files)} document(s)!")
+                                            time.sleep(1)
+                                            st.rerun()
+                                            break
+                                        elif task_status == "failed":
+                                            err = task_info.get("error", "Unknown ingestion error")
+                                            status_box.update(label="Ingestion failed", state="error", expanded=True)
+                                            st.error(f"Ingestion failed: {err}")
+                                            break
+                                    else:
+                                        status_box.update(label="Failed to fetch ingestion status", state="error")
+                                        st.error(f"Status check failed ({poll_res.status_code}): {poll_res.text}")
+                                        break
                             else:
+                                status_box.update(label=f"Upload failed ({response.status_code})", state="error")
                                 st.error(f"Upload failed ({response.status_code}): {response.text}")
                     except Exception as e:
                         st.error(f"Connection error: {e}")
